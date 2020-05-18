@@ -3,6 +3,7 @@ package main
 import (
 	"bytes"
 	"encoding/gob"
+	"fmt"
 	"log"
 
 	"github.com/honkytonktown/GoDistributed/datamanager"
@@ -10,9 +11,10 @@ import (
 	"github.com/honkytonktown/GoDistributed/qutils"
 )
 
-const url = "amqp://guest:guest@local:5672"
+const url = "amqp://guest:guest@localhost:5672"
 
 func main() {
+	fmt.Println("Starting in main")
 	conn, ch := qutils.GetChannel(url)
 	defer conn.Close()
 	defer ch.Close()
@@ -29,12 +31,13 @@ func main() {
 	if err != nil {
 		log.Fatalln("Failed to get access to messages")
 	}
-
+	fmt.Println("Consuming messages")
 	for msg := range msgs {
 		buf := bytes.NewReader(msg.Body)
 		dec := gob.NewDecoder(buf)
 		sd := &dto.SensorMessage{}
 		dec.Decode(sd)
+		fmt.Printf("The msg: %v\n", sd)
 
 		err := datamanager.SaveReading(sd)
 		if err != nil {
