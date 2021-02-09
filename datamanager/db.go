@@ -14,7 +14,7 @@ const (
 	hostname     = "localhost"
 	hostport     = 5432
 	username     = "postgres"
-	password     = "Listennow55"
+	password     = ""
 	databasename = "GoDistributed"
 )
 
